@@ -171,7 +171,8 @@ FX_BOOL ConvertBuffer(FXDIB_Format dest_format,
                       const CFX_DIBSource* pSrcBitmap,
                       int src_left,
                       int src_top,
-                      std::unique_ptr<uint32_t, FxFreeDeleter>* pal);
+                      std::unique_ptr<uint32_t, FxFreeDeleter>* pal,
+                      void* pIccTransform = nullptr);
 
 class CFX_DIBSource {
  public:

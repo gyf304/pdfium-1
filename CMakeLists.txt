@@ -11,13 +11,13 @@ include(TargetArch.cmake)
 target_architecture(TARGET_ARCH)
 message(STATUS "Target: " ${TARGET_ARCH})
 
-set(USE_BINUTILS_WORKAROUND ON CACHE BOOL "use gcc-ar and gcc-ranlib instead ar and ranlib (is needed for LTO)")
+#set(USE_BINUTILS_WORKAROUND ON CACHE BOOL "use gcc-ar and gcc-ranlib instead ar and ranlib (is needed for LTO)")
 if(USE_BINUTILS_WORKAROUND)
     set(CMAKE_AR gcc-ar)
     set(CMAKE_RANLIB gcc-ranlib)
 endif(USE_BINUTILS_WORKAROUND)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wc++0x-compat -fno-exceptions -fvisibility=hidden")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wc++0x-compat -fno-exceptions -fvisibility=hidden -fembed-bitcode")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
