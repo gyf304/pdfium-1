@@ -317,7 +317,7 @@ static void PSCompressData(int PSLevel,
     }
   } else {
     if (pEncoders &&
-        pEncoders->GetBasicModule()->RunLengthEncode(src_buf, src_size,
+        pEncoders->GetRleModule()->Encode(src_buf, src_size,
                                                      &dest_buf, &dest_size)) {
       filter = "/RunLengthDecode filter ";
     }
