@@ -779,22 +779,37 @@ FX_BOOL ConvertBuffer(FXDIB_Format dest_format,
   }
 }
 
-CFX_DIBitmap* CFX_DIBSource::CloneConvert(FXDIB_Format dest_format) const {
-  if (dest_format == GetFormat())
-    return Clone(nullptr);
-
-  std::unique_ptr<CFX_DIBitmap> pClone(new CFX_DIBitmap);
-  if (!pClone->Create(m_Width, m_Height, dest_format))
+CFX_DIBitmap* CFX_DIBSource::CloneConvert(FXDIB_Format dest_format,
+                                          const FX_RECT* pClip,
+                                          void* pIccTransform) const {
+  if (dest_format == GetFormat() && !pIccTransform) {
+    return Clone(pClip);
+  }
+  if (pClip) {
+    CFX_DIBitmap* pClone = Clone(pClip);
+    if (!pClone) {
+      return nullptr;
+    }
+    if (!pClone->ConvertFormat(dest_format, pIccTransform)) {
+      delete pClone;
+      return nullptr;
+    }
+    return pClone;
+  }
+  CFX_DIBitmap* pClone = new CFX_DIBitmap;
+  if (!pClone->Create(m_Width, m_Height, dest_format)) {
+    delete pClone;
     return nullptr;
-
+  }
+  FX_BOOL ret = TRUE;
   CFX_DIBitmap* pSrcAlpha = nullptr;
   if (HasAlpha()) {
     pSrcAlpha = (GetFormat() == FXDIB_Argb) ? GetAlphaMask() : m_pAlphaMask;
-    if (!pSrcAlpha)
+    if (!pSrcAlpha) {
+      delete pClone;
       return nullptr;
+    }
   }
-
-  FX_BOOL ret = TRUE;
   if (dest_format & 0x0200) {
     if (dest_format == FXDIB_Argb) {
       ret = pSrcAlpha ? pClone->LoadChannel(FXDIB_Alpha, pSrcAlpha, FXDIB_Alpha)
@@ -807,99 +822,22 @@ CFX_DIBitmap* CFX_DIBSource::CloneConvert(FXDIB_Format dest_format) const {
     delete pSrcAlpha;
     pSrcAlpha = nullptr;
   }
-  if (!ret)
-    return nullptr;
-
-  std::unique_ptr<uint32_t, FxFreeDeleter> pal_8bpp;
-  if (!ConvertBuffer(dest_format, pClone->GetBuffer(), pClone->GetPitch(),
-                     m_Width, m_Height, this, 0, 0, &pal_8bpp)) {
-    return nullptr;
-  }
-  if (pal_8bpp)
-    pClone->CopyPalette(pal_8bpp.get());
-  return pClone.release();
-}
-
-FX_BOOL CFX_DIBitmap::ConvertFormat(FXDIB_Format dest_format) {
-  FXDIB_Format src_format = GetFormat();
-  if (dest_format == src_format)
-    return TRUE;
-
-  if (dest_format == FXDIB_8bppMask && src_format == FXDIB_8bppRgb &&
-      !m_pPalette) {
-    m_AlphaFlag = 1;
-    return TRUE;
-  }
-  if (dest_format == FXDIB_Argb && src_format == FXDIB_Rgb32) {
-    m_AlphaFlag = 2;
-    for (int row = 0; row < m_Height; row++) {
-      uint8_t* scanline = m_pBuffer + row * m_Pitch + 3;
-      for (int col = 0; col < m_Width; col++) {
-        *scanline = 0xff;
-        scanline += 4;
-      }
-    }
-    return TRUE;
-  }
-  int dest_bpp = dest_format & 0xff;
-  int dest_pitch = (dest_bpp * m_Width + 31) / 32 * 4;
-  uint8_t* dest_buf = FX_TryAlloc(uint8_t, dest_pitch * m_Height + 4);
-  if (!dest_buf) {
-    return FALSE;
-  }
-  CFX_DIBitmap* pAlphaMask = nullptr;
-  if (dest_format == FXDIB_Argb) {
-    FXSYS_memset(dest_buf, 0xff, dest_pitch * m_Height + 4);
-    if (m_pAlphaMask) {
-      for (int row = 0; row < m_Height; row++) {
-        uint8_t* pDstScanline = dest_buf + row * dest_pitch + 3;
-        const uint8_t* pSrcScanline = m_pAlphaMask->GetScanline(row);
-        for (int col = 0; col < m_Width; col++) {
-          *pDstScanline = *pSrcScanline++;
-          pDstScanline += 4;
-        }
-      }
-    }
-  } else if (dest_format & 0x0200) {
-    if (src_format == FXDIB_Argb) {
-      pAlphaMask = GetAlphaMask();
-      if (!pAlphaMask) {
-        FX_Free(dest_buf);
-        return FALSE;
-      }
-    } else {
-      if (!m_pAlphaMask) {
-        if (!BuildAlphaMask()) {
-          FX_Free(dest_buf);
-          return FALSE;
-        }
-        pAlphaMask = m_pAlphaMask;
-        m_pAlphaMask = nullptr;
-      } else {
-        pAlphaMask = m_pAlphaMask;
-      }
-    }
-  }
-  FX_BOOL ret = FALSE;
-  std::unique_ptr<uint32_t, FxFreeDeleter> pal_8bpp;
-  ret = ConvertBuffer(dest_format, dest_buf, dest_pitch, m_Width, m_Height,
-                      this, 0, 0, &pal_8bpp);
   if (!ret) {
-    if (pAlphaMask != m_pAlphaMask)
-      delete pAlphaMask;
-    FX_Free(dest_buf);
-    return FALSE;
+    delete pClone;
+    return nullptr;
   }
-  if (m_pAlphaMask && pAlphaMask != m_pAlphaMask)
-    delete m_pAlphaMask;
-  m_pAlphaMask = pAlphaMask;
-  m_pPalette = std::move(pal_8bpp);
-  if (!m_bExtBuf)
-    FX_Free(m_pBuffer);
-  m_bExtBuf = FALSE;
-  m_pBuffer = dest_buf;
-  m_bpp = (uint8_t)dest_format;
-  m_AlphaFlag = (uint8_t)(dest_format >> 8);
-  m_Pitch = dest_pitch;
-  return TRUE;
+  uint32_t* pal_8bpp = nullptr;
+  ret = ConvertBuffer(dest_format, pClone->GetBuffer(), pClone->GetPitch(),
+                      m_Width, m_Height, this, 0, 0, pal_8bpp, pIccTransform);
+  if (!ret) {
+    FX_Free(pal_8bpp);
+    delete pClone;
+    return nullptr;
+  }
+  if (pal_8bpp) {
+    pClone->CopyPalette(pal_8bpp);
+    FX_Free(pal_8bpp);
+    pal_8bpp = nullptr;
+  }
+  return pClone;
 }

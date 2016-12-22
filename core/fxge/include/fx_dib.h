@@ -221,8 +221,9 @@ class CFX_DIBSource {
   void CopyPalette(const uint32_t* pSrcPal);
 
   CFX_DIBitmap* Clone(const FX_RECT* pClip = nullptr) const;
-  CFX_DIBitmap* CloneConvert(FXDIB_Format format) const;
-
+  CFX_DIBitmap* CloneConvert(FXDIB_Format format,
+                             const FX_RECT* pClip = nullptr,
+                             void* pIccTransform = nullptr) const;
   CFX_DIBitmap* StretchTo(int dest_width,
                           int dest_height,
                           uint32_t flags = 0,
