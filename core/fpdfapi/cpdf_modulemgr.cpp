@@ -55,3 +55,7 @@ CCodec_IccModule* CPDF_ModuleMgr::GetIccModule() {
 CCodec_FlateModule* CPDF_ModuleMgr::GetFlateModule() {
   return m_pCodecModule ? m_pCodecModule->GetFlateModule() : nullptr;
 }
+
+CCodec_RleModule* CPDF_ModuleMgr::GetRleModule() {
+  return m_pCodecModule ? m_pCodecModule->GetRleModule() : nullptr;
+}
