@@ -59,3 +59,7 @@ CCodec_FlateModule* CPDF_ModuleMgr::GetFlateModule() {
 CCodec_RleModule* CPDF_ModuleMgr::GetRleModule() {
   return m_pCodecModule ? m_pCodecModule->GetRleModule() : nullptr;
 }
+
+CCodec_A85Module* CPDF_ModuleMgr::GetA85Module() {
+  return m_pCodecModule ? m_pCodecModule->GetA85Module() : nullptr;
+}

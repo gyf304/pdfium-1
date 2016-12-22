@@ -15,6 +15,7 @@
 #include "core/fxcodec/codec/ccodec_faxmodule.h"
 #include "core/fxcodec/codec/ccodec_flatemodule.h"
 #include "core/fxcodec/codec/ccodec_rlemodule.h"
+#include "core/fxcodec/codec/ccodec_a85module.h"
 #include "core/fxcodec/codec/ccodec_iccmodule.h"
 #include "core/fxcodec/codec/ccodec_jbig2module.h"
 #include "core/fxcodec/codec/ccodec_jpegmodule.h"
@@ -70,6 +71,7 @@ class CCodec_ModuleMgr {
   CCodec_IccModule* GetIccModule() const { return m_pIccModule.get(); }
   CCodec_FlateModule* GetFlateModule() const { return m_pFlateModule.get(); }
   CCodec_RleModule* GetRleModule() const { return m_pRleModule.get(); }
+  CCodec_A85Module* GetA85Module() const { return m_pA85Module.get(); }
 
 #ifdef PDF_ENABLE_XFA
   CCodec_ProgressiveDecoder* CreateProgressiveDecoder();
@@ -96,6 +98,7 @@ class CCodec_ModuleMgr {
 
   std::unique_ptr<CCodec_FlateModule> m_pFlateModule;
   std::unique_ptr<CCodec_RleModule> m_pRleModule;
+  std::unique_ptr<CCodec_A85Module> m_pA85Module;
 };
 
 void ReverseRGB(uint8_t* pDestBuf, const uint8_t* pSrcBuf, int pixels);

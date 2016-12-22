@@ -505,6 +505,7 @@ set(FXCODEC_HEDAERS
     core/fxcodec/codec/ccodec_faxmodule.h
     core/fxcodec/codec/ccodec_flatemodule.h
     core/fxcodec/codec/ccodec_rlemodule.h
+    core/fxcodec/codec/ccodec_a85module.h
     core/fxcodec/codec/ccodec_iccmodule.h
     core/fxcodec/codec/ccodec_jbig2module.h
     core/fxcodec/codec/ccodec_jpegmodule.h
@@ -518,6 +519,7 @@ set(FXCODEC_SOURCES
     core/fxcodec/codec/fx_codec_fax.cpp
     core/fxcodec/codec/fx_codec_flate.cpp
     core/fxcodec/codec/fx_codec_rle.cpp
+    core/fxcodec/codec/fx_codec_a85.cpp
     core/fxcodec/codec/fx_codec_icc.cpp
     core/fxcodec/codec/fx_codec_jbig.cpp
     core/fxcodec/codec/fx_codec_jpeg.cpp

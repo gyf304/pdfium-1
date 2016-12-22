@@ -18,6 +18,7 @@ class CCodec_Jbig2Module;
 class CCodec_JpegModule;
 class CCodec_JpxModule;
 class CCodec_RleModule;
+class CCodec_A85Module;
 class CCodec_ModuleMgr;
 class CPDF_PageModule;
 
