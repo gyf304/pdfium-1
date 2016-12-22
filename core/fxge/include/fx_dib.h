@@ -156,6 +156,12 @@ FX_ARGB ArgbEncode(int a, FX_COLORREF rgb);
    ((uint8_t)(argb)) << 16 | ((uint8_t)(argb >> 24) << 24))
 #define FXGETFLAG_COLORTYPE(flag) (uint8_t)((flag) >> 8)
 #define FXGETFLAG_ALPHA_FILL(flag) (uint8_t)(flag)
+#define FXGETFLAG_ALPHA_STROKE(flag) (uint8_t)((flag) >> 16)
+#define FXSETFLAG_COLORTYPE(flag, val) \
+  flag = (((val) << 8) | (flag & 0xffff00ff))
+#define FXSETFLAG_ALPHA_FILL(flag, val) flag = ((val) | (flag & 0xffffff00))
+#define FXSETFLAG_ALPHA_STROKE(flag, val) \
+  flag = (((val) << 16) | (flag & 0xff00ffff))
 
 FX_BOOL ConvertBuffer(FXDIB_Format dest_format,
                       uint8_t* dest_buf,
