@@ -308,17 +308,17 @@ static void PSCompressData(int PSLevel,
   }
   CCodec_ModuleMgr* pEncoders = CFX_GEModule::Get()->GetCodecModule();
   uint8_t* dest_buf = NULL;
-  uint32_t dest_size = src_size;
+  uint32_t dest_size = 0;
   if (PSLevel >= 3) {
     if (pEncoders &&
-        pEncoders->GetFlateModule()->Encode(src_buf, src_size, dest_buf,
-                                            dest_size)) {
+        pEncoders->GetFlateModule()->Encode(src_buf, src_size, &dest_buf,
+                                            &dest_size)) {
       filter = "/FlateDecode filter ";
     }
   } else {
     if (pEncoders &&
         pEncoders->GetBasicModule()->RunLengthEncode(src_buf, src_size,
-                                                     dest_buf, dest_size)) {
+                                                     &dest_buf, &dest_size)) {
       filter = "/RunLengthDecode filter ";
     }
   }
