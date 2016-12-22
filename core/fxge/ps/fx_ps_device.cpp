@@ -27,7 +27,7 @@ class CPSFont {
   int m_nGlyphs;
 };
 CFX_PSRenderer::CFX_PSRenderer() {
-  m_pOutput = NULL;
+  m_pOutput = nullptr;
   m_bColorSet = m_bGraphStateSet = FALSE;
   m_bInited = FALSE;
 }
@@ -171,7 +171,7 @@ FX_BOOL CFX_PSRenderer::SetClip_PathStroke(const CFX_PathData* pPathData,
         << pObject2Device->e << " " << pObject2Device->f << "]cm ";
     m_pOutput->OutputPS((const FX_CHAR*)buf.GetBuffer(), buf.GetSize());
   }
-  OutputPath(pPathData, NULL);
+  OutputPath(pPathData, nullptr);
   CFX_FloatRect rect = pPathData->GetBoundingBox(pGraphState->m_LineWidth,
                                                  pGraphState->m_MiterLimit);
   rect.Transform(pObject2Device);
@@ -217,7 +217,7 @@ FX_BOOL CFX_PSRenderer::DrawPath(const CFX_PathData* pPathData,
       m_pOutput->OutputPS((const FX_CHAR*)buf.GetBuffer(), buf.GetSize());
     }
   }
-  OutputPath(pPathData, stroke_alpha ? NULL : pObject2Device);
+  OutputPath(pPathData, stroke_alpha ? nullptr : pObject2Device);
   if (fill_mode && fill_alpha) {
     SetColor(fill_color, alpha_flag, pIccTransform);
     if ((fill_mode & 3) == FXFILL_WINDING) {
@@ -307,7 +307,7 @@ static void PSCompressData(int PSLevel,
     return;
   }
   CCodec_ModuleMgr* pEncoders = CFX_GEModule::Get()->GetCodecModule();
-  uint8_t* dest_buf = NULL;
+  uint8_t* dest_buf = nullptr;
   uint32_t dest_size = 0;
   if (PSLevel >= 3) {
     if (pEncoders &&
@@ -326,7 +326,7 @@ static void PSCompressData(int PSLevel,
     output_buf = dest_buf;
     output_size = dest_size;
   } else {
-    filter = NULL;
+    filter = nullptr;
     FX_Free(dest_buf);
   }
 }
@@ -418,7 +418,7 @@ FX_BOOL CFX_PSRenderer::DrawDIBits(const CFX_DIBSource* pSource,
     CFX_DIBSource* pConverted = (CFX_DIBSource*)pSource;
     if (pIccTransform) {
       FXDIB_Format format = m_bCmykOutput ? FXDIB_Cmyk : FXDIB_Rgb;
-      pConverted = pSource->CloneConvert(format, NULL, pIccTransform);
+      pConverted = pSource->CloneConvert(format, nullptr, pIccTransform);
     } else {
       switch (pSource->GetFormat()) {
         case FXDIB_1bppRgb:
@@ -447,9 +447,9 @@ FX_BOOL CFX_PSRenderer::DrawDIBits(const CFX_DIBSource* pSource,
       return FALSE;
     }
     int Bpp = pConverted->GetBPP() / 8;
-    uint8_t* output_buf = NULL;
+    uint8_t* output_buf = nullptr;
     FX_STRSIZE output_size = 0;
-    const FX_CHAR* filter = NULL;
+    const FX_CHAR* filter = nullptr;
     if (flags & FXRENDER_IMAGE_LOSSY) {
       CCodec_ModuleMgr* pEncoders = CFX_GEModule::Get()->GetCodecModule();
       if (pEncoders &&
@@ -488,7 +488,7 @@ FX_BOOL CFX_PSRenderer::DrawDIBits(const CFX_DIBSource* pSource,
     }
     if (pConverted != pSource) {
       delete pConverted;
-      pConverted = NULL;
+      pConverted = nullptr;
     }
     buf << " 8[";
     buf << width << " 0 0 -" << height << " 0 " << height << "]";
@@ -510,11 +510,11 @@ void CFX_PSRenderer::SetColor(uint32_t color,
                               void* pIccTransform) {
   if (!CFX_GEModule::Get()->GetCodecModule() ||
       !CFX_GEModule::Get()->GetCodecModule()->GetIccModule()) {
-    pIccTransform = NULL;
+    pIccTransform = nullptr;
   }
   FX_BOOL bCMYK = FALSE;
   if (pIccTransform) {
-    ICodec_IccModule* pIccModule =
+    CCodec_IccModule* pIccModule =
         CFX_GEModule::Get()->GetCodecModule()->GetIccModule();
     color = FXGETFLAG_COLORTYPE(alpha_flag) ? FXCMYK_TODIB(color)
                                             : FXARGB_TODIB(color);
@@ -688,7 +688,7 @@ FX_BOOL CFX_PSRenderer::DrawText(int nChars,
     buf << pCharPos[i].m_OriginX << " " << pCharPos[i].m_OriginY << " m";
     CFX_ByteString hex;
     hex.Format("<%02X>", ps_glyphindex);
-    buf << hex.AsByteStringC() << "Tj\n";
+    buf << hex.AsStringC() << "Tj\n";
   }
   buf << "Q\n";
   m_pOutput->OutputPS((const FX_CHAR*)buf.GetBuffer(), buf.GetSize());

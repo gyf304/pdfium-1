@@ -48,13 +48,13 @@ class CFX_PSRenderer : public IFX_RenderDeviceDriver {
                    uint32_t stroke_color,
                    int fill_mode,
                    int alpha_flag = 0,
-                   void* pIccTransform = NULL);
+                   void* pIccTransform = nullptr);
   FX_BOOL SetDIBits(const CFX_DIBSource* pBitmap,
                     uint32_t color,
                     int dest_left,
                     int dest_top,
                     int alpha_flag = 0,
-                    void* pIccTransform = NULL);
+                    void* pIccTransform = nullptr);
   FX_BOOL StretchDIBits(const CFX_DIBSource* pBitmap,
                         uint32_t color,
                         int dest_left,
@@ -63,13 +63,13 @@ class CFX_PSRenderer : public IFX_RenderDeviceDriver {
                         int dest_height,
                         uint32_t flags,
                         int alpha_flag = 0,
-                        void* pIccTransform = NULL);
+                        void* pIccTransform = nullptr);
   FX_BOOL DrawDIBits(const CFX_DIBSource* pBitmap,
                      uint32_t color,
                      const CFX_Matrix* pMatrix,
                      uint32_t flags,
                      int alpha_flag = 0,
-                     void* pIccTransform = NULL);
+                     void* pIccTransform = nullptr);
   FX_BOOL DrawText(int nChars,
                    const FXTEXT_CHARPOS* pCharPos,
                    CFX_Font* pFont,
@@ -78,7 +78,7 @@ class CFX_PSRenderer : public IFX_RenderDeviceDriver {
                    FX_FLOAT font_size,
                    uint32_t color,
                    int alpha_flag = 0,
-                   void* pIccTransform = NULL);
+                   void* pIccTransform = nullptr);
  private:
   IFX_PSOutput* m_pOutput;
   int m_PSLevel;
