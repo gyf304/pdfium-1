@@ -699,7 +699,7 @@ void CFX_PSRenderer::WritePSBinary(const uint8_t* data, int len) {
   uint32_t dest_size;
   CCodec_ModuleMgr* pEncoders = CFX_GEModule::Get()->GetCodecModule();
   if (pEncoders &&
-      pEncoders->GetBasicModule()->A85Encode(data, len, dest_buf, dest_size)) {
+      pEncoders->GetA85Module()->Encode(data, len, &dest_buf, &dest_size)) {
     m_pOutput->OutputPS((const FX_CHAR*)dest_buf, dest_size);
     FX_Free(dest_buf);
   } else {

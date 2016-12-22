@@ -304,7 +304,7 @@ class CFX_DIBitmap : public CFX_DIBSource {
 
   void TakeOver(CFX_DIBitmap* pSrcBitmap);
 
-  FX_BOOL ConvertFormat(FXDIB_Format format);
+  FX_BOOL ConvertFormat(FXDIB_Format format, void* pIccTransform = nullptr);
 
   void Clear(uint32_t color);
 

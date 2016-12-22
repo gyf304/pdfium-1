@@ -54,6 +54,7 @@ class CPDF_ModuleMgr {
   CCodec_IccModule* GetIccModule();
   CCodec_FlateModule* GetFlateModule();
   CCodec_RleModule* GetRleModule();
+  CCodec_A85Module* GetA85Module();
 
  private:
   CPDF_ModuleMgr();
