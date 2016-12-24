@@ -416,7 +416,7 @@ int CPDF_ColorSpace::GetBufSize() const {
   if (m_Family == PDFCS_PATTERN) {
     return sizeof(PatternValue);
   }
-  return m_nComponents * sizeof(FX_FLOAT);
+  return m_nComponents * (sizeof(FX_FLOAT));
 }
 
 FX_FLOAT* CPDF_ColorSpace::CreateBuf() {

@@ -31,7 +31,10 @@
 #define _FXM_PLATFORM_ANDROID_ 4  // _FX_ANDROID_ always.
 
 #ifndef _FX_OS_
-#if defined(__ANDROID__)
+#if defined(_FORCE_USE_LINUX)
+#define _FX_OS_ _FX_LINUX_DESKTOP_
+#define _FXM_PLATFORM_ _FXM_PLATFORM_LINUX_
+#elif defined(__ANDROID__)
 #define _FX_OS_ _FX_ANDROID_
 #define _FXM_PLATFORM_ _FXM_PLATFORM_ANDROID_
 #elif defined(_WIN32)

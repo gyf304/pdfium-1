@@ -17,7 +17,7 @@ if(USE_BINUTILS_WORKAROUND)
     set(CMAKE_RANLIB gcc-ranlib)
 endif(USE_BINUTILS_WORKAROUND)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wc++0x-compat -fno-exceptions -fvisibility=hidden -fembed-bitcode")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++0x -Wc++0x-compat -fno-exceptions -fvisibility=hidden -D_FORCE_USE_LINUX")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
